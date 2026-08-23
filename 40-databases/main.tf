@@ -96,7 +96,7 @@ resource "aws_instance" "mysql" {
 
   tags =merge(
     {
-        Name = "${var.project}-${var.environment}-mysql"
+        Name = "${var.project}-${var.environment}-mysql ${var.environment}"
     },
     local.common_tags
   )
@@ -123,7 +123,7 @@ resource "terraform_data" "mysql" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo sh /tmp/bootstrap.sh mysql"
+      "sudo sh /tmp/bootstrap.sh mysql ${var.environment}"
     ]
   }
 }
