@@ -40,7 +40,3 @@ resource "aws_iam_instance_profile" "mysql" {
   name = "${var.project}-${var.environment}-mysql"
   role = aws_iam_role.mysql.name
 }
-
-
-git config --global user.name "gopal-gunji"
-git config --global user.email "gopalakrishna.gunji@gmail.com" DevVikramAditya@1203
