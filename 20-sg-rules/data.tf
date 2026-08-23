@@ -18,6 +18,10 @@ data "aws_ssm_parameter" "redis_sg_id" {
   name = "/${var.project}/${var.environment}/redis_sg_id"
 }
 
+data "aws_ssm_parameter" "mysql_sg_id" {
+  name = "/${var.project}/${var.environment}/mysql_sg_id"
+}
+
 data "aws_ssm_parameter" "catalogue_sg_id" {
   name = "/${var.project}/${var.environment}/catalogue_sg_id"
 }
@@ -25,3 +29,4 @@ data "aws_ssm_parameter" "catalogue_sg_id" {
 data "aws_ssm_parameter" "user_sg_id" {
   name = "/${var.project}/${var.environment}/user_sg_id"
 }
+
