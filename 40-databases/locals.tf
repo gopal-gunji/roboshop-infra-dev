@@ -12,6 +12,6 @@ locals {
     redis_sg_id = data.aws_ssm_parameter.redis_sg_id.value
     mysql_sg_id = data.aws_ssm_parameter.mysql_sg_id.value
     mysql_role_name =join("-", [ 
-            for name in ["${var.project}","${var.var.environment}", "mysql"] : tittle(name)
+            for name in ["${var.project}","${var.environment}", "mysql"] : title(name)
         ])
 }
