@@ -1,6 +1,6 @@
 resource "aws_iam_role" "mysql" {
     name = local.mysql_role_name #Roboshop-Dev-Mysql
-    assume_role_policy = jsondecode({
+    assume_role_policy = jsonencode({
         version = "2012-10-17"
         statement = [
             {
@@ -8,7 +8,7 @@ resource "aws_iam_role" "mysql" {
             Effect = "Allow"
             Sid = ""
             Principal = {
-                Service = "ec2.amazon.com"
+                Service = "ec2.amazonaws.com"
             }
         },
       ]
