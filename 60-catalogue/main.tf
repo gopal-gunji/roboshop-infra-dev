@@ -185,20 +185,33 @@ resource "aws_autoscaling_policy" "catalogue" {
     target_value = 70.0
   }
 }
-
+# This is depends on target group 
 resource "aws_lb_listener_rule" "catalogue" {
   listener_arn = local.backend_alb_listener_arn
   priority     = 10
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.static.arn
+    target_group_arn = aws_lb_target_group.catalogue.arn
   }
 
   condition {
     host_header {
       values = ["catalogue.backend-alb-${var.environment}.${var.domain_name}"]
     }
+  }
+}
+
+resource "terraform_data" "catalogue_delete" {
+  triggers_replace = [
+    aws_instance.catalogue.id
+  ]
+  depends_on = [aws_autoscaling_policy.catalogue]
+  # it executes in bastin
+  provisioner "local-exec" {
+    command = "aws ec2 terminate-instances  ${aws_instance.catalogue.id}"
+
+
   }
 }
 
