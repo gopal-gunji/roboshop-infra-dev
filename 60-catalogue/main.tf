@@ -147,9 +147,7 @@ resource "aws_autoscaling_group" "catalogue" {
       min_healthy_percentage = 50
       instance_warmup        = 120
     }
-    triggers = [
-      aws_launch_template.catalogue.latest_version,
-    ]
+    triggers = ["launch_template"]
   }
 
 
