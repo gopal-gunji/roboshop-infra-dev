@@ -140,38 +140,65 @@ resource "aws_autoscaling_group" "catalogue" {
   target_group_arns         = [aws_lb_target_group.catalogue.arn]
 
 
-  tag {
-    key                 = "Name"
-    value               = "${var.project}-${var.environment}-catalogue"
-    propagate_at_launch = true
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+      instance_warmup        = 120
+    }
+    triggers = [
+      aws_launch_template.catalogue.latest_version,
+    ]
   }
 
+
+  dynamic "tag" {
+      for_each = merge(
+      {
+          Name = "${var.project}-${var.environment}-catalogue"
+      },
+      local.common_tags
+    )
+   content {
+      key                 = each.key
+      value               = each.value
+      propagate_at_launch = true
+    }
+  }
+  #with in 15 minutes autoscalling should be success
   timeouts {
     delete = "15m"
   }
 
-  tag {
-    key                 = "lorem"
-    value               = "ipsum"
-    propagate_at_launch = false
+}
+
+resource "aws_autoscaling_policy" "catalogue" {
+  autoscaling_group_name = aws_autoscaling_group.catalogue.name
+  name = "${var.project}-${var.environment}-catalogue"
+  policy_type = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 70.0
   }
 }
-#With Latest Version Of Launch Template
 
-resource "aws_launch_template" "foobar" {
-  name_prefix   = "foobar"
-  image_id      = "ami-1a2b3c"
-  instance_type = "t2.micro"
-}
+resource "aws_lb_listener_rule" "catalogue" {
+  listener_arn = local.backend_alb_listener_arn
+  priority     = 10
 
-resource "aws_autoscaling_group" "bar" {
-  availability_zones = ["us-east-1a"]
-  desired_capacity   = 1
-  max_size           = 1
-  min_size           = 1
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.static.arn
+  }
 
-  launch_template {
-    id      = aws_launch_template.foobar.id
-    version = "$Latest"
+  condition {
+    host_header {
+      values = ["catalogue.backend-alb-${var.environment}.${var.domain_name}"]
+    }
   }
 }
+
