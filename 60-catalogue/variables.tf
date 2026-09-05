@@ -15,3 +15,7 @@ variable "domain_name" {
     default = "durgagopalakrishna.online"
   
 }
+
+variable "app_version" {
+  default = "v3"
+}
