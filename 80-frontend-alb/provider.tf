@@ -4,15 +4,15 @@ terraform {
       source  = "hashicorp/aws"
       version = "6.33.0" # Terraform AWS Provider version 6.33.0 is compatible with Terraform 1.7.0 and later versions.
     }
-    
+
   }
 
-    backend "s3" {
-    bucket         = "remote-state-daws-8686-dev"
-    key            = "roboshop-dev-frontend-alb"
-    region         = "us-east-1"
-    encrypt        = true
-    use_lockfile     = true
+  backend "s3" {
+    bucket       = "remote-state-daws-8686-dev"
+    key          = "roboshop-dev-frontend-alb"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true
     #dynamodb_table = "terraform-state-lock-table"
   }
 

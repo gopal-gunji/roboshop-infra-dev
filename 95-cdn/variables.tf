@@ -7,11 +7,11 @@ variable "environment" {
 }
 
 variable "zone_id" {
-    default = "Z038839231IZ6AQPNSOZ"
-  
+  default = "Z038839231IZ6AQPNSOZ"
+
 }
 
 variable "domain_name" {
-    default = "durgagopalakrishna.online"
-  
+  default = "durgagopalakrishna.online"
+
 }

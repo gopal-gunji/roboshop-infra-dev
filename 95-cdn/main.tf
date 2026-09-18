@@ -1,22 +1,22 @@
 resource "aws_cloudfront_distribution" "roboshop" {
   origin {
-     # https://frontend-dev.durgagopalakrishna.online
-    domain_name              = "frontend-${var.environment}.${var.domain_name}"
-    origin_id                = "frontend-${var.environment}.${var.domain_name}"
+    # https://frontend-dev.durgagopalakrishna.online
+    domain_name = "frontend-${var.environment}.${var.domain_name}"
+    origin_id   = "frontend-${var.environment}.${var.domain_name}"
 
     custom_origin_config {
       http_port              = 80
       https_port             = 443
       origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
+      origin_ssl_protocols   = ["TLSv1.2", "TLSv1.1"]
     }
 
   }
 
-  enabled             = true
-  is_ipv6_enabled     = false
+  enabled         = true
+  is_ipv6_enabled = false
 
-    # CDN url https://roboshop-dev.durgagopalakrishna.online
+  # CDN url https://roboshop-dev.durgagopalakrishna.online
   aliases = ["${var.project}-${var.environment}.${var.domain_name}"]
 
   default_cache_behavior {
@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "roboshop" {
     target_origin_id = "frontend-${var.environment}.${var.domain_name}"
 
     viewer_protocol_policy = "https-only"
-    cache_policy_id         = local.cashingDisabled
+    cache_policy_id        = local.cachingDisabled
 
   }
 
@@ -38,7 +38,7 @@ resource "aws_cloudfront_distribution" "roboshop" {
 
 
     viewer_protocol_policy = "https-only"
-    cache_policy_id         = local.cachingOptimized
+    cache_policy_id        = local.cachingOptimized
   }
 
   # Cache behavior with precedence 1
@@ -49,7 +49,7 @@ resource "aws_cloudfront_distribution" "roboshop" {
     target_origin_id = "frontend-${var.environment}.${var.domain_name}"
 
     viewer_protocol_policy = "https-only"
-    cache_policy_id         = local.cachingOptimized
+    cache_policy_id        = local.cachingOptimized
   }
 
   price_class = "PriceClass_All"
@@ -73,7 +73,7 @@ resource "aws_cloudfront_distribution" "roboshop" {
     acm_certificate_arn = local.acm_certificate_arn
     ssl_support_method  = "sni-only"
   }
- 
+
 
 
 }
@@ -83,7 +83,7 @@ resource "aws_route53_record" "cdn" {
   zone_id = var.zone_id
   name    = "${var.project}-${var.environment}.${var.domain_name}"
   type    = "A"
-    # CDN details
+  # CDN details
   alias {
     name                   = aws_cloudfront_distribution.roboshop.domain_name
     zone_id                = aws_cloudfront_distribution.roboshop.hosted_zone_id
@@ -91,3 +91,6 @@ resource "aws_route53_record" "cdn" {
   }
   allow_overwrite = true
 }
+
+
+
